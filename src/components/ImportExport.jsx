@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { Download, Upload, AlertCircle } from 'lucide-react';
 
-export function ImportExport({ collection, onImport }) {
+export const ImportExport = memo(({ collection, onImport }) => {
   const [importData, setImportData] = useState('');
   const [error, setError] = useState('');
 
-  const handleExport = () => {
+  const handleExport = useCallback(() => {
     const dataStr = JSON.stringify(collection, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
     
     const exportFileDefaultName = `board-game-collection-${new Date().toISOString().split('T')[0]}.json`;
     
@@ -15,9 +15,9 @@ export function ImportExport({ collection, onImport }) {
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
-  };
+  }, [collection]);
 
-  const handleImport = () => {
+  const handleImport = useCallback(() => {
     try {
       const parsed = JSON.parse(importData);
       
@@ -25,7 +25,6 @@ export function ImportExport({ collection, onImport }) {
         throw new Error('Data should be an array of games');
       }
 
-      // Basic validation
       const isValid = parsed.every(item => 
         item.id && item.name && typeof item.id === 'string'
       );
@@ -41,9 +40,9 @@ export function ImportExport({ collection, onImport }) {
     } catch (err) {
       setError(err.message);
     }
-  };
+  }, [importData, onImport]);
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = useCallback((event) => {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -52,11 +51,11 @@ export function ImportExport({ collection, onImport }) {
       setImportData(e.target.result);
     };
     reader.readAsText(file);
-  };
+  }, []);
 
   return (
     <div className="import-export">
-      <h2 className="section-title">Import / Export Collection</h2>
+      <h2 className="section-title">Import / Export</h2>
       
       <div className="export-section">
         <h3>Export Collection</h3>
@@ -68,46 +67,42 @@ export function ImportExport({ collection, onImport }) {
 
       <div className="import-section">
         <h3>Import Collection</h3>
-        <div className="import-options">
-          <div className="file-upload">
-            <label className="file-upload-label">
-              <Upload size={16} />
-              Upload JSON File
-              <input
-                type="file"
-                accept=".json"
-                onChange={handleFileUpload}
-                className="file-input"
-              />
-            </label>
-          </div>
-          
-          <div className="import-divider">or paste JSON:</div>
-          
-          <textarea
-            value={importData}
-            onChange={(e) => setImportData(e.target.value)}
-            placeholder='Paste your JSON data here...'
-            className="import-textarea"
-            rows="6"
+        <label className="file-upload-label">
+          <Upload size={16} />
+          Upload JSON File
+          <input
+            type="file"
+            accept=".json"
+            onChange={handleFileUpload}
+            className="file-input"
           />
-          
-          {error && (
-            <div className="import-error">
-              <AlertCircle size={16} />
-              {error}
-            </div>
-          )}
-          
-          <button 
-            onClick={handleImport} 
-            disabled={!importData.trim()}
-            className="import-button"
-          >
-            Import Collection
-          </button>
-        </div>
+        </label>
+        
+        <div className="import-divider">or paste JSON:</div>
+        
+        <textarea
+          value={importData}
+          onChange={(e) => setImportData(e.target.value)}
+          placeholder='Paste your JSON data here...'
+          className="import-textarea"
+          rows="6"
+        />
+        
+        {error && (
+          <div className="import-error">
+            <AlertCircle size={16} />
+            {error}
+          </div>
+        )}
+        
+        <button 
+          onClick={handleImport} 
+          disabled={!importData.trim()}
+          className="import-button"
+        >
+          Import Collection
+        </button>
       </div>
     </div>
   );
-}
+});

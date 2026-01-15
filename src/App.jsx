@@ -1,13 +1,12 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { GameSearch } from './components/GameSearch';
 import { GameList } from './components/GameList';
 import { DigitalShelf } from './components/DigitalShelf';
 import { ImportExport } from './components/ImportExport';
-import { useLocalStorage } from './hooks/useLocalStorage';
-import { searchGames } from './utils/bggApi';
-import xml2js from 'xml2js';
+import { useGameCollection } from './hooks/useGameCollection';
+import './App.css';
 
-// Mock data for development (remove when using real API)
+// Mock games for development - replace with actual API calls when ready
 const MOCK_GAMES = [
   {
     id: '174430',
@@ -28,49 +27,63 @@ const MOCK_GAMES = [
     minplaytime: '90',
     maxplaytime: '115',
     thumbnail: 'https://cf.geekdo-images.com/micro/img/3cQgH9qJVqXNW_2mDacEToVRCkw=/fit-in/64x64/pic3163924.jpg'
+  },
+  {
+    id: '167791',
+    name: 'Terraforming Mars',
+    yearpublished: '2016',
+    minplayers: '1',
+    maxplayers: '5',
+    minplaytime: '120',
+    maxplaytime: '180',
+    thumbnail: 'https://cf.geekdo-images.com/micro/img/FbatK_sqZiW6XpCe8N-VJLREjnE=/fit-in/64x64/pic3536616.jpg'
+  },
+  {
+    id: '224517',
+    name: 'Wingspan',
+    yearpublished: '2019',
+    minplayers: '1',
+    maxplayers: '5',
+    minplaytime: '40',
+    maxplaytime: '70',
+    thumbnail: 'https://cf.geekdo-images.com/micro/img/EGJf3vxOzSP9ZX57208Kzxa6ibA=/fit-in/64x64/pic4458123.jpg'
   }
 ];
 
 function App() {
   const [searchResults, setSearchResults] = useState([]);
-  const [collection, setCollection] = useLocalStorage('boardGameCollection', []);
   const [loading, setLoading] = useState(false);
-
-  const handleSearch = async (query) => {
-  setLoading(true);
+  const [error, setError] = useState('');
   
-  try {
-    const searchResults = await searchGames(query);
+  const { collection, addGame, removeGame, importCollection } = useGameCollection();
+
+  const handleSearch = useCallback(async (query) => {
+    if (!query.trim()) return;
     
-    // Optionally get detailed info for each game
-    if (searchResults.length > 0) {
-      const gameIds = searchResults.map(game => game.id);
-      const detailedGames = await getGameDetails(gameIds);
-      setSearchResults(detailedGames);
-    } else {
+    setLoading(true);
+    setError('');
+    
+    try {
+      // Simulate API call - replace with actual API when you get access
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      const results = MOCK_GAMES.filter(game =>
+        game.name.toLowerCase().includes(query.toLowerCase())
+      );
+      
+      if (results.length === 0) {
+        setSearchResults([]);
+        setError('No games found. Try a different search.');
+      } else {
+        setSearchResults(results);
+      }
+    } catch (err) {
+      setError('Search failed. Please try again.');
       setSearchResults([]);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Search error:', error);
-    setSearchResults([]);
-  } finally {
-    setLoading(false);
-  }
-};
-
-  const handleAddToCollection = (game) => {
-    if (!collection.some(g => g.id === game.id)) {
-      setCollection([...collection, game]);
-    }
-  };
-
-  const handleRemoveFromCollection = (gameId) => {
-    setCollection(collection.filter(game => game.id !== gameId));
-  };
-
-  const handleImport = (importedCollection) => {
-    setCollection(importedCollection);
-  };
+  }, []);
 
   return (
     <div className="app">
@@ -82,7 +95,19 @@ function App() {
       <main className="app-main">
         <div className="search-section">
           <GameSearch onSearch={handleSearch} />
-          {loading && <p className="loading-text">Searching...</p>}
+          
+          {error && (
+            <div style={{ 
+              marginTop: '1rem', 
+              padding: '0.75rem',
+              background: '#fee2e2',
+              color: '#dc2626',
+              borderRadius: '8px',
+              textAlign: 'center'
+            }}>
+              {error}
+            </div>
+          )}
         </div>
 
         <div className="content-grid">
@@ -90,18 +115,19 @@ function App() {
             <GameList
               games={searchResults}
               collection={collection}
-              onAddToCollection={handleAddToCollection}
+              loading={loading}
+              onAddToCollection={addGame}
             />
           </div>
           
           <div className="right-panel">
             <DigitalShelf
               collection={collection}
-              onRemoveFromCollection={handleRemoveFromCollection}
+              onRemoveFromCollection={removeGame}
             />
             <ImportExport
               collection={collection}
-              onImport={handleImport}
+              onImport={importCollection}
             />
           </div>
         </div>
