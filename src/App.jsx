@@ -45,7 +45,7 @@ const MOCK_GAMES = [
     maxplayers: '5',
     minplaytime: '40',
     maxplaytime: '70',
-    thumbnail: 'https://cf.geekdo-images.com/micro/img/EGJf3vxOzSP9ZX57208Kzxa6ibA=/fit-in/64x64/pic4458123.jpg'
+    thumbnail: 'https://cf.geekdo-images.com/yLZJCVLlIx4c7eJEWUNJ7w__itemrep@2x/img/veohwKEtFpERbDq7xGMggHqLKX8=/fit-in/492x600/filters:strip_icc()/pic4458123.jpg'
   }
 ];
 
