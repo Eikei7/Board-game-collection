@@ -6,7 +6,6 @@ import { parseStringPromise } from 'xml2js';
 const BGG_API_TOKEN = import.meta.env.VITE_BGG_API_TOKEN || '';
 const BGG_API_BASE = 'https://boardgamegeek.com/xmlapi2';
 
-// Helper function to create headers with authorization
 const getHeaders = () => {
   const headers = {};
   if (BGG_API_TOKEN) {
@@ -15,9 +14,6 @@ const getHeaders = () => {
   return headers;
 };
 
-/**
- * Search for board games by name
- */
 export const searchGames = async (query) => {
   try {
     const response = await axios.get(`${BGG_API_BASE}/search`, {
@@ -31,7 +27,6 @@ export const searchGames = async (query) => {
     
     const result = await parseStringPromise(response.data);
     
-    // Transform XML to usable format
     if (result.items && result.items.item) {
       return result.items.item.map(item => ({
         id: item.$.id,
@@ -43,7 +38,6 @@ export const searchGames = async (query) => {
     return [];
   } catch (error) {
     console.error('Error searching games:', error);
-    // Fallback to mock data if API fails (for development)
     if (error.response?.status === 401) {
       console.error('API Token missing or invalid. Register at: https://boardgamegeek.com/applications');
     }
@@ -51,12 +45,8 @@ export const searchGames = async (query) => {
   }
 };
 
-/**
- * Get detailed information about a specific game
- */
 export const getGameDetails = async (gameIds) => {
   try {
-    // Can fetch multiple games at once by comma-separated IDs
     const ids = Array.isArray(gameIds) ? gameIds.join(',') : gameIds;
     
     const response = await axios.get(`${BGG_API_BASE}/thing`, {
@@ -100,9 +90,7 @@ export const getGameDetails = async (gameIds) => {
   }
 };
 
-/**
- * Get a user's collection (for future expansion)
- */
+
 export const getUserCollection = async (username) => {
   try {
     const response = await axios.get(`${BGG_API_BASE}/collection`, {
@@ -115,7 +103,6 @@ export const getUserCollection = async (username) => {
     });
     
     const result = await parseStringPromise(response.data);
-    // Process collection data...
     return result;
   } catch (error) {
     console.error('Error fetching user collection:', error);
@@ -123,14 +110,12 @@ export const getUserCollection = async (username) => {
   }
 };
 
-// Helper function to get the primary name (not alternative names)
 const getPrimaryName = (names) => {
   if (!names) return 'Unknown';
   const primary = names.find(name => name.$.type === 'primary');
   return primary ? primary.$.value : names[0].$.value;
 };
 
-// Helper function to extract categories/mechanics from link array
 const extractValues = (links, type) => {
   if (!links) return [];
   return links
@@ -138,7 +123,6 @@ const extractValues = (links, type) => {
     .map(link => link.$.value);
 };
 
-// Mock data for development (remove when API is working)
 const getMockGames = (query) => {
   const mockGames = [
     {

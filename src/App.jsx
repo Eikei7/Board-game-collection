@@ -6,7 +6,6 @@ import { ImportExport } from './components/ImportExport';
 import { useGameCollection } from './hooks/useGameCollection';
 import './App.css';
 
-// Mock games for development - replace with actual API calls when ready
 const MOCK_GAMES = [
   {
     id: '174430',
@@ -64,7 +63,6 @@ function App() {
     setError('');
     
     try {
-      // Simulate API call - replace with actual API when you get access
       await new Promise(resolve => setTimeout(resolve, 300));
       
       const results = MOCK_GAMES.filter(game =>

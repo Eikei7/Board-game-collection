@@ -1,9 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 
-/**
- * Custom hook for managing board game collection
- * Handles adding, removing, and importing games with localStorage persistence
- */
 export function useGameCollection(storageKey = 'boardGameCollection') {
   const [collection, setCollection] = useState(() => {
     try {
@@ -15,7 +11,6 @@ export function useGameCollection(storageKey = 'boardGameCollection') {
     }
   });
 
-  // Persist to localStorage whenever collection changes
   useEffect(() => {
     localStorage.setItem(storageKey, JSON.stringify(collection));
   }, [collection, storageKey]);
