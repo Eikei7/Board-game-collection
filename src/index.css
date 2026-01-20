@@ -8,7 +8,7 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
   min-height: 100vh;
   padding: 20px;
 }
@@ -23,7 +23,7 @@ body {
 }
 
 .app-header {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
   color: white;
   padding: 2rem;
   text-align: center;
@@ -79,13 +79,13 @@ body {
 
 .search-input:focus {
   outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  border-color: #0d9488;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
 }
 
 .search-button {
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -97,7 +97,7 @@ body {
 
 .search-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 10px 20px rgba(13, 148, 136, 0.2);
 }
 
 .search-button:disabled {
@@ -111,10 +111,10 @@ body {
   color: #6b7280;
 }
 
-.content-grid {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 2rem;
+.app-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 
 .section-title {
@@ -143,6 +143,20 @@ body {
 .game-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.game-card.skeleton {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.skeleton-img, .skeleton-line {
+  background: #e5e7eb;
+  border-radius: 8px;
 }
 
 .game-thumbnail {
@@ -175,7 +189,7 @@ body {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -203,7 +217,7 @@ body {
   background: #f9fafb;
   border-radius: 16px;
   padding: 1.5rem;
-  margin-bottom: 2rem;
+  margin-top: 2rem;
 }
 
 .shelf-header {
@@ -222,7 +236,7 @@ body {
 }
 
 .collection-grid {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .collection-item {
@@ -283,6 +297,7 @@ body {
   background: #f9fafb;
   border-radius: 16px;
   padding: 1.5rem;
+  margin-top: 2rem;
 }
 
 .export-section, .import-section {
@@ -299,7 +314,7 @@ body {
 .export-button, .import-button {
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -314,7 +329,7 @@ body {
 
 .export-button:hover, .import-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+  box-shadow: 0 10px 20px rgba(13, 148, 136, 0.2);
 }
 
 .import-button:disabled {
@@ -328,9 +343,9 @@ body {
   justify-content: center;
   gap: 0.5rem;
   padding: 1rem;
-  background: #e0e7ff;
-  color: #4f46e5;
-  border: 2px dashed #a5b4fc;
+  background: #ccfbf1;
+  color: #0d9488;
+  border: 2px dashed #99f6e4;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -338,7 +353,7 @@ body {
 }
 
 .file-upload-label:hover {
-  background: #c7d2fe;
+  background: #99f6e4;
 }
 
 .file-input {
@@ -383,7 +398,7 @@ body {
 
 .import-textarea:focus {
   outline: none;
-  border-color: #4f46e5;
+  border-color: #0d9488;
 }
 
 .import-error {
@@ -412,14 +427,16 @@ body {
   margin-bottom: 0.25rem;
 }
 
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #9ca3af;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .content-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .right-panel {
-    order: -1;
+  .collection-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -439,7 +456,7 @@ body {
   .search-form {
     flex-direction: column;
   }
-  
+
   .collection-grid {
     grid-template-columns: repeat(2, 1fr);
   }

@@ -6,6 +6,7 @@ import { ImportExport } from './components/ImportExport';
 import { useGameCollection } from './hooks/useGameCollection';
 import './App.css';
 
+// Mock games for development - replace with actual API calls when ready
 const MOCK_GAMES = [
   {
     id: '174430',
@@ -45,7 +46,7 @@ const MOCK_GAMES = [
     maxplayers: '5',
     minplaytime: '40',
     maxplaytime: '70',
-    thumbnail: 'https://cf.geekdo-images.com/yLZJCVLlIx4c7eJEWUNJ7w__itemrep@2x/img/veohwKEtFpERbDq7xGMggHqLKX8=/fit-in/492x600/filters:strip_icc()/pic4458123.jpg'
+    thumbnail: 'https://cf.geekdo-images.com/micro/img/EGJf3vxOzSP9ZX57208Kzxa6ibA=/fit-in/64x64/pic4458123.jpg'
   }
 ];
 
@@ -63,6 +64,7 @@ function App() {
     setError('');
     
     try {
+      // Simulate API call - replace with actual API when you get access
       await new Promise(resolve => setTimeout(resolve, 300));
       
       const results = MOCK_GAMES.filter(game =>
@@ -108,27 +110,22 @@ function App() {
           )}
         </div>
 
-        <div className="content-grid">
-          <div className="left-panel">
-            <GameList
-              games={searchResults}
-              collection={collection}
-              loading={loading}
-              onAddToCollection={addGame}
-            />
-          </div>
-          
-          <div className="right-panel">
-            <DigitalShelf
-              collection={collection}
-              onRemoveFromCollection={removeGame}
-            />
-            <ImportExport
-              collection={collection}
-              onImport={importCollection}
-            />
-          </div>
-        </div>
+        <GameList
+          games={searchResults}
+          collection={collection}
+          loading={loading}
+          onAddToCollection={addGame}
+        />
+        
+        <ImportExport
+          collection={collection}
+          onImport={importCollection}
+        />
+        
+        <DigitalShelf
+          collection={collection}
+          onRemoveFromCollection={removeGame}
+        />
       </main>
 
       <footer className="app-footer">

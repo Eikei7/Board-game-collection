@@ -78,16 +78,6 @@ export const ImportExport = memo(({ collection, onImport }) => {
           />
         </label>
         
-        <div className="import-divider">or paste JSON:</div>
-        
-        <textarea
-          value={importData}
-          onChange={(e) => setImportData(e.target.value)}
-          placeholder='Paste your JSON data here...'
-          className="import-textarea"
-          rows="6"
-        />
-        
         {error && (
           <div className="import-error">
             <AlertCircle size={16} />
