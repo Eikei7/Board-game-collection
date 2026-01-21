@@ -34,7 +34,7 @@ export const searchGames = async (query) => {
       params: {
         query,
         type: 'boardgame',
-        exact: 0 // Fuzzy search for better results
+        exact: 0
       }
     });
 

@@ -18,9 +18,6 @@ export const GameCard = memo(({ game, isAdded, onAdd }) => (
       <p className="game-players">
         Players: {game.minplayers}-{game.maxplayers}
       </p>
-      {/* <p className="game-time">
-        Play Time: {game.minplaytime}-{game.maxplaytime} mins
-      </p> */}
     </div>
     <button
       onClick={() => onAdd(game)}

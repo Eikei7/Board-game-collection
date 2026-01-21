@@ -165,9 +165,40 @@ body {
   transform: translateY(-2px);
 }
 
-.collection-thumbnail, .game-thumbnail {
-  width: 120px;
-  height: 120px;
+.collection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.collection-list .collection-item {
+  display: flex;
+  flex-direction: row; /* Bild och text på samma rad */
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.collection-list .collection-thumbnail {
+  width: 60px;
+  height: 60px;
+  margin-right: 1.5rem;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.collection-list .collection-item-info {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.collection-thumbnail {
+  width: 150px;
+  height: 150px;
   object-fit: cover;
   border-radius: 6px;
   margin-bottom: 0.75rem;
@@ -308,13 +339,13 @@ body {
   margin-bottom: 3rem;
 }
 
-/* .game-thumbnail {
-  width: 80px;
-  height: 80px;
+ .game-thumbnail {
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
-} */
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+}
 
 .game-title {
   font-size: 1.2rem;
@@ -497,6 +528,12 @@ body {
 .skeleton-img, .skeleton-line {
   background: #e5e7eb;
   border-radius: 8px;
+}
+
+.year-text {
+  color: #6b7280;
+  font-weight: normal;
+  font-size: 0.9em;
 }
 
 /* Media Queries */

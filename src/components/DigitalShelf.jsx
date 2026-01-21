@@ -1,7 +1,8 @@
-import { memo, useRef } from 'react';
-import { Trash2, Download, Upload, SortAsc, SortDesc, ArrowUpAZ, ArrowDownAZ  } from 'lucide-react';
+import { memo, useRef, useState } from 'react';
+import { Trash2, Download, Upload, ArrowUpAZ, ArrowDownAZ, LayoutGrid, List } from 'lucide-react';
 
 export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport, onSortChange, currentSort }) => {
+  const [viewMode, setViewMode] = useState('grid');
   const fileInputRef = useRef(null);
 
   const handleImportClick = () => {
@@ -17,6 +18,26 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
           </div>
           
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            
+            {collection.length > 0 && (
+              <div className="view-container" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '12px', padding: '2px', marginRight: '0.5rem' }}>
+                <button 
+                  onClick={() => setViewMode('grid')}
+                  title="Grid View"
+                  style={getSortButtonStyle(viewMode === 'grid')}
+                >
+                  <LayoutGrid size={18} />
+                </button>
+                <button 
+                  onClick={() => setViewMode('list')}
+                  title="List View"
+                  style={getSortButtonStyle(viewMode === 'list')}
+                >
+                  <List size={18} />
+                </button>
+              </div>
+            )}
+
             {collection.length > 0 && (
               <div className="sort-container" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '12px', padding: '2px' }}>
                 <button 
@@ -90,18 +111,18 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
           <p>Search for games above to start building your collection.</p>
         </div>
       ) : (
-        <div className="collection-grid">
+        <div className={viewMode === 'grid' ? 'collection-grid' : 'collection-list'}>
           {collection.map((game) => (
             <div key={game.id} className="collection-item">
-              {game.thumbnail && (
+              {game.image && (
                 <img 
-                  src={game.thumbnail} 
+                  src={game.image} 
                   alt={game.name}
                   className="collection-thumbnail"
                 />
               )}
               <div className="collection-item-info">
-                <h4 className="collection-item-title">{game.name} ({game.yearpublished})</h4>
+                <h4 className="collection-item-title">{game.name} <span className="year-text">({game.yearpublished})</span></h4>
                 <button 
                   onClick={(e) => {
                     e.stopPropagation();

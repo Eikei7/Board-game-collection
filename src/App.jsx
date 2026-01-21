@@ -27,37 +27,45 @@ function App() {
   }, []);
 
   const handleSearch = useCallback(async (query) => {
-    if (!query.trim()) {
+  if (!query.trim()) {
+    setSearchResults([]);
+    return;
+  }
+
+  setLoading(true);
+  setError('');
+
+  try {
+    const basicResults = await searchGames(query);
+
+    const filteredResults = basicResults.filter(game => 
+      game.name.toLowerCase().includes(query.toLowerCase())
+    );
+
+    if (filteredResults.length === 0) {
       setSearchResults([]);
-      setError('');
-      setLoading(false);
+      setError(`Inga spel hittades som matchar "${query}" exakt.`);
       return;
     }
-    
-    setLoading(true);
-    setError('');
-    setSearchResults([]); 
-    
-    try {
-      const basicResults = await searchGames(query);
-      
-      if (basicResults.length === 0) {
-        setSearchResults([]); 
-        setError('No games found. Try a different search.');
-        return;
-      }
 
-      const gameIds = basicResults.slice(0, 10).map(game => game.id);
-      const detailedGames = await getGameDetails(gameIds);
-      
-      setSearchResults(detailedGames);
-    } catch (err) {
-      setError(err.message || 'Search failed. Please try again.');
-      setSearchResults([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    const prioritizedResults = filteredResults.sort((a, b) => {
+      const aStarts = a.name.toLowerCase().startsWith(query.toLowerCase());
+      const bStarts = b.name.toLowerCase().startsWith(query.toLowerCase());
+      if (aStarts && !bStarts) return -1;
+      if (!aStarts && bStarts) return 1;
+      return 0;
+    });
+
+    const gameIds = prioritizedResults.slice(0, 20).map(game => game.id);
+    const detailedGames = await getGameDetails(gameIds);
+    
+    setSearchResults(detailedGames);
+  } catch (err) {
+    setError('Sökningen misslyckades.');
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   const [sortOrder, setSortOrder] = useState('name-asc');
 
