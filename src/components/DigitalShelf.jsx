@@ -20,7 +20,6 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
           </div>
           
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            {/* SORTERINGSKNAPP / DROPDOWN */}
             {collection.length > 0 && (
               <div className="sort-container" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '12px', padding: '2px' }}>
                 <button 

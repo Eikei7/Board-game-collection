@@ -3,7 +3,6 @@ import { GameCard } from './GameCard';
 import { GameCardSkeleton } from './GameCardSkeleton';
 
 export const GameList = memo(({ games, collection, loading, onAddToCollection }) => {
-  // Only show the list if there are games or we're loading
   if (!loading && games.length === 0) {
     return null;
   }

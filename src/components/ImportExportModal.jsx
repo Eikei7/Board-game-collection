@@ -5,7 +5,6 @@ export const ImportExportModal = memo(({ isOpen, data, onClose, onImport }) => {
   const [importData, setImportData] = useState('');
   const [error, setError] = useState('');
 
-  // Update local state when data prop changes
   const importDataToUse = data || importData;
 
   const handleImport = useCallback(() => {

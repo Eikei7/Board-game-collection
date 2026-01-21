@@ -16,7 +16,7 @@ export function GameSearch({ onSearch }) {
   const handleClear = useCallback(async () => {
     setQuery('');
     setLoading(true);
-    await onSearch(''); // Skickar tom sträng till parent-komponenten
+    await onSearch('');
     setLoading(false);
   }, [onSearch]);
 
@@ -41,7 +41,6 @@ export function GameSearch({ onSearch }) {
     />
   </div>
 
-  {/* En wrapper för att hålla knapparna på samma rad */}
   <div style={{ display: 'flex', gap: '1rem' }}>
     <button 
       onClick={handleSubmit}
