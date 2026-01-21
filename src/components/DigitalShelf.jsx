@@ -14,7 +14,7 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
       <div className="shelf-header">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h2 className="section-title" style={{ marginBottom: '0.25rem' }}>Your Collection ({collection.length})</h2>
+            <h2 className="section-title" style={{ marginBottom: '0.25rem' }}>My Games ({collection.length})</h2>
           </div>
           
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -122,7 +122,7 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
                 />
               )}
               <div className="collection-item-info">
-                <h4 className="collection-item-title">{game.name} <span className="year-text">({game.yearpublished})</span></h4>
+                <h4 className="collection-item-title">{game.name} <span className="year-text">({game.yearpublished}) | {game.minplayers}-{game.maxplayers} players | {game.minplaytime}-{game.maxplaytime} mins</span></h4>
                 <button 
                   onClick={(e) => {
                     e.stopPropagation();

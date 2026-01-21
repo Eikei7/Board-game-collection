@@ -121,7 +121,7 @@ body {
 }
 
 .clear-button:hover:not(:disabled) {
-  background: rgba(13, 148, 136, 0.05); /* Väldigt lätt toning vid hover */
+  background: rgba(13, 148, 136, 0.05);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(13, 148, 136, 0.1);
 }
@@ -144,9 +144,10 @@ body {
 
 .collection-item-info {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .collection-item-title {
@@ -158,10 +159,11 @@ body {
   overflow-wrap: break-word;
   flex: 1;
   min-width: 0;
+  text-align: center;
 }
 
 .collection-item:hover {
-  border-color: #ef4444;
+  border-color: #0d9488;
   transform: translateY(-2px);
 }
 
@@ -173,7 +175,7 @@ body {
 
 .collection-list .collection-item {
   display: flex;
-  flex-direction: row; /* Bild och text på samma rad */
+  flex-direction: row;
   align-items: center;
   padding: 0.75rem 1rem;
   background: white;
@@ -194,6 +196,11 @@ body {
   flex: 1;
   justify-content: space-between;
   align-items: center;
+  text-align: left;
+}
+
+.collection-list .collection-item-title {
+  text-align: left;
 }
 
 .collection-thumbnail {

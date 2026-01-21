@@ -44,7 +44,7 @@ function App() {
 
     if (filteredResults.length === 0) {
       setSearchResults([]);
-      setError(`Inga spel hittades som matchar "${query}" exakt.`);
+      setError(`No games found that exactly match "${query}".`);
       return;
     }
 
@@ -61,7 +61,7 @@ function App() {
     
     setSearchResults(detailedGames);
   } catch (err) {
-    setError('Sökningen misslyckades.');
+    setError('Search failed.');
   } finally {
     setLoading(false);
   }
