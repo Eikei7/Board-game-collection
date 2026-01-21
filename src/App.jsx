@@ -5,6 +5,7 @@ import { DigitalShelf } from './components/DigitalShelf';
 import { ImportExportModal } from './components/ImportExportModal';
 import { useGameCollection } from './hooks/useGameCollection';
 import { searchGames, getGameDetails } from './utils/bggApi';
+import bggLogo from './assets/powered_by_BGG_04_XL.png';
 import './App.css';
 
 function App() {
@@ -141,8 +142,8 @@ const sortedCollection = useMemo(() => {
       </main>
 
       <footer className="app-footer">
-        <p>Data provided by BoardGameGeek API</p>
-        <p>All data stored locally in your browser</p>
+        <a href="https://boardgamegeek.com" target="_blank" rel="noopener noreferrer"><img src={bggLogo} alt="Powered by BoardGameGeek" width="250" /></a>
+        <p className='credits'>Made by <a href="https://frontend-erik.se" target="_blank" rel="noopener noreferrer">Erik Karlsson</a></p>
       </footer>
     </div>
   );

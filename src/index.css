@@ -1,5 +1,6 @@
 /* Imports & Globala stilar */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url(https://fonts.googleapis.com/css?family=Geom:300,regular,500,600,700,800,900,300italic,italic,500italic,600italic,700italic,800italic,900italic);
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display:regular,500,600,700,800,900,italic,500italic,600italic,700italic,800italic,900italic');
 
 * {
@@ -149,8 +150,9 @@ body {
 }
 
 .collection-item-title {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: 'Geom', sans-serif;
   color: #1f2937;
   word-break: break-word;
   overflow-wrap: break-word;
@@ -163,12 +165,18 @@ body {
   transform: translateY(-2px);
 }
 
-.collection-thumbnail {
+.collection-thumbnail, .game-thumbnail {
   width: 120px;
   height: 120px;
   object-fit: cover;
   border-radius: 6px;
   margin-bottom: 0.75rem;
+}
+
+.credits {
+  text-decoration: none;
+  font-family: 'Geom', sans-serif;
+  font-size: 1rem;
 }
 
 .digital-shelf {
@@ -243,18 +251,19 @@ body {
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 1.5rem;
   display: flex;
   gap: 1.5rem;
   transition: all 0.3s ease;
 } */
 
  .game-card {
+  padding: 1rem;
   background: white;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  align-items: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border: 1px solid #e5e7eb;
   height: 100%;
@@ -267,11 +276,11 @@ body {
   flex-direction: column;
 }
 
-.game-card img {
+/* .game-card img {
   width: 100%;
   height: 200px;
-  object-fit: cover; /* Beskär bilden snyggt för att passa gridet */
-}
+  object-fit: cover;
+} */
 
 .game-card.skeleton {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -299,13 +308,13 @@ body {
   margin-bottom: 3rem;
 }
 
-.game-thumbnail {
+/* .game-thumbnail {
   width: 80px;
   height: 80px;
   object-fit: cover;
   border-radius: 8px;
   flex-shrink: 0;
-}
+} */
 
 .game-title {
   font-size: 1.2rem;
@@ -439,7 +448,7 @@ body {
 .search-form {
   display: flex;
   gap: 1rem;
-  max-width: 600px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -483,11 +492,6 @@ body {
 
 .shelf-header {
   margin-bottom: 1.5rem;
-}
-
-.shelf-subtitle {
-  color: #6b7280;
-  font-size: 0.9rem;
 }
 
 .skeleton-img, .skeleton-line {

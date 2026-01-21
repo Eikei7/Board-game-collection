@@ -14,9 +14,6 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h2 className="section-title" style={{ marginBottom: '0.25rem' }}>Your Collection ({collection.length})</h2>
-            {collection.length > 0 && (
-              <p className="shelf-subtitle">Click trash icon to remove</p>
-            )}
           </div>
           
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -104,7 +101,7 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
                 />
               )}
               <div className="collection-item-info">
-                <h4 className="collection-item-title">{game.name}</h4>
+                <h4 className="collection-item-title">{game.name} ({game.yearpublished})</h4>
                 <button 
                   onClick={(e) => {
                     e.stopPropagation();

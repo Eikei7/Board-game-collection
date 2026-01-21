@@ -13,14 +13,14 @@ export const GameCard = memo(({ game, isAdded, onAdd }) => (
     <div className="game-info">
       <h3 className="game-title">{game.name}</h3>
       {game.yearpublished && (
-        <p className="game-year">Published: {game.yearpublished}</p>
+        <p className="game-year">{game.yearpublished}</p>
       )}
       <p className="game-players">
         Players: {game.minplayers}-{game.maxplayers}
       </p>
-      <p className="game-time">
+      {/* <p className="game-time">
         Play Time: {game.minplaytime}-{game.maxplaytime} mins
-      </p>
+      </p> */}
     </div>
     <button
       onClick={() => onAdd(game)}
