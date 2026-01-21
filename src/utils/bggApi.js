@@ -1,165 +1,161 @@
 import axios from 'axios';
-import { parseStringPromise } from 'xml2js';
 
-// IMPORTANT: Get your token from BGG after registration
-// Store it in .env.local file as REACT_APP_BGG_API_TOKEN
-const BGG_API_TOKEN = import.meta.env.VITE_BGG_API_TOKEN || '';
 const BGG_API_BASE = 'https://boardgamegeek.com/xmlapi2';
+const BGG_API_TOKEN = import.meta.env.VITE_BGG_API_TOKEN;
 
-const getHeaders = () => {
-  const headers = {};
-  if (BGG_API_TOKEN) {
-    headers['Authorization'] = `Bearer ${BGG_API_TOKEN}`;
+/**
+ * Create axios instance with authorization header
+ */
+const apiClient = axios.create({
+  baseURL: BGG_API_BASE,
+  headers: {
+    'Authorization': `Bearer ${BGG_API_TOKEN}`
   }
-  return headers;
+});
+
+/**
+ * Parse XML response using DOMParser (browser-native)
+ * @param {string} xmlString - The XML string to parse
+ * @returns {Document} Parsed XML document
+ */
+const parseXML = (xmlString) => {
+  const parser = new DOMParser();
+  return parser.parseFromString(xmlString, 'application/xml');
 };
 
+/**
+ * Search for board games by name
+ * @param {string} query - The game name to search for
+ * @returns {Promise<Array>} Array of game objects with id, name, and year published
+ */
 export const searchGames = async (query) => {
   try {
-    const response = await axios.get(`${BGG_API_BASE}/search`, {
-      params: { 
-        query, 
+    const response = await apiClient.get('/search', {
+      params: {
+        query,
         type: 'boardgame',
-        exact: 0 // 0 for fuzzy search, 1 for exact match
-      },
-      headers: getHeaders()
+        exact: 0 // Fuzzy search for better results
+      }
     });
-    
-    const result = await parseStringPromise(response.data);
-    
-    if (result.items && result.items.item) {
-      return result.items.item.map(item => ({
-        id: item.$.id,
-        name: item.name ? item.name[0].$.value : 'Unknown',
-        type: item.$.type,
-        yearpublished: item.yearpublished ? item.yearpublished[0].$.value : ''
-      }));
-    }
-    return [];
+
+    const xmlDoc = parseXML(response.data);
+    const items = xmlDoc.querySelectorAll('item');
+    const results = [];
+
+    items.forEach(item => {
+      const id = item.getAttribute('id');
+      const nameElement = item.querySelector('name');
+      const name = nameElement ? nameElement.getAttribute('value') : 'Unknown';
+      const yearElement = item.querySelector('yearpublished');
+      const yearpublished = yearElement ? yearElement.getAttribute('value') : 'N/A';
+
+      results.push({
+        id,
+        name,
+        yearpublished
+      });
+    });
+
+    return results;
   } catch (error) {
     console.error('Error searching games:', error);
-    if (error.response?.status === 401) {
-      console.error('API Token missing or invalid. Register at: https://boardgamegeek.com/applications');
-    }
-    return getMockGames(query); // Fallback during development
+    throw new Error('Failed to search games. Please try again.');
   }
 };
 
+/**
+ * Get detailed information about specific games
+ * @param {string|string[]} gameIds - Single game ID or array of game IDs
+ * @returns {Promise<Array>} Array of detailed game objects
+ */
 export const getGameDetails = async (gameIds) => {
   try {
+    // Can fetch multiple games at once by comma-separated IDs
     const ids = Array.isArray(gameIds) ? gameIds.join(',') : gameIds;
-    
-    const response = await axios.get(`${BGG_API_BASE}/thing`, {
+
+    const response = await apiClient.get('/thing', {
       params: {
         id: ids,
-        stats: 1, // Include rating statistics
-        videos: 0, // Exclude videos to reduce payload
-        marketplace: 0,
-        comments: 0
-      },
-      headers: getHeaders()
+        stats: 1 // Include rating statistics
+      }
     });
-    
-    const result = await parseStringPromise(response.data);
-    
-    if (result.items && result.items.item) {
-      const games = Array.isArray(result.items.item) 
-        ? result.items.item 
-        : [result.items.item];
+
+    const xmlDoc = parseXML(response.data);
+    const items = xmlDoc.querySelectorAll('item');
+    const results = [];
+
+    items.forEach(item => {
+      const id = item.getAttribute('id');
       
-      return games.map(game => ({
-        id: game.$.id,
-        name: getPrimaryName(game.name),
-        description: game.description ? game.description[0] : '',
-        yearpublished: game.yearpublished ? game.yearpublished[0].$.value : '',
-        minplayers: game.minplayers ? game.minplayers[0].$.value : '',
-        maxplayers: game.maxplayers ? game.maxplayers[0].$.value : '',
-        minplaytime: game.minplaytime ? game.minplaytime[0].$.value : '',
-        maxplaytime: game.maxplaytime ? game.maxplaytime[0].$.value : '',
-        thumbnail: game.thumbnail ? game.thumbnail[0] : '',
-        image: game.image ? game.image[0] : '',
-        rating: game.statistics ? game.statistics[0].ratings[0].average[0].$.value : 'N/A',
-        categories: extractValues(game.link, 'boardgamecategory'),
-        mechanics: extractValues(game.link, 'boardgamemechanic')
-      }));
-    }
-    return [];
+      // Get primary name
+      const nameElements = item.querySelectorAll('name');
+      let name = 'Unknown';
+      nameElements.forEach(el => {
+        if (el.getAttribute('type') === 'primary') {
+          name = el.getAttribute('value');
+        }
+      });
+
+      // Get description
+      const description = item.querySelector('description')?.textContent || '';
+
+      // Get year published
+      const yearpublished = item.querySelector('yearpublished')?.getAttribute('value') || 'N/A';
+
+      // Get player counts
+      const minplayers = item.querySelector('minplayers')?.getAttribute('value') || '1';
+      const maxplayers = item.querySelector('maxplayers')?.getAttribute('value') || '1';
+
+      // Get playtime
+      const minplaytime = item.querySelector('minplaytime')?.getAttribute('value') || '0';
+      const maxplaytime = item.querySelector('maxplaytime')?.getAttribute('value') || '0';
+
+      // Get images
+      const thumbnail = item.querySelector('thumbnail')?.textContent || '';
+      const image = item.querySelector('image')?.textContent || '';
+
+      // Get rating
+      let rating = 'N/A';
+      const avgRating = item.querySelector('average');
+      if (avgRating) {
+        rating = avgRating.getAttribute('value');
+      }
+
+      // Get categories and mechanics
+      const categories = [];
+      const mechanics = [];
+      const links = item.querySelectorAll('link');
+
+      links.forEach(link => {
+        const type = link.getAttribute('type');
+        const value = link.getAttribute('value');
+        if (type === 'boardgamecategory') {
+          categories.push(value);
+        } else if (type === 'boardgamemechanic') {
+          mechanics.push(value);
+        }
+      });
+
+      results.push({
+        id,
+        name,
+        description,
+        yearpublished,
+        minplayers,
+        maxplayers,
+        minplaytime,
+        maxplaytime,
+        thumbnail,
+        image,
+        rating,
+        categories,
+        mechanics
+      });
+    });
+
+    return results;
   } catch (error) {
     console.error('Error fetching game details:', error);
-    return [];
+    throw new Error('Failed to load game details.');
   }
-};
-
-
-export const getUserCollection = async (username) => {
-  try {
-    const response = await axios.get(`${BGG_API_BASE}/collection`, {
-      params: {
-        username,
-        stats: 1,
-        own: 1 // Only get games they own
-      },
-      headers: getHeaders()
-    });
-    
-    const result = await parseStringPromise(response.data);
-    return result;
-  } catch (error) {
-    console.error('Error fetching user collection:', error);
-    return null;
-  }
-};
-
-const getPrimaryName = (names) => {
-  if (!names) return 'Unknown';
-  const primary = names.find(name => name.$.type === 'primary');
-  return primary ? primary.$.value : names[0].$.value;
-};
-
-const extractValues = (links, type) => {
-  if (!links) return [];
-  return links
-    .filter(link => link.$.type === type)
-    .map(link => link.$.value);
-};
-
-const getMockGames = (query) => {
-  const mockGames = [
-    {
-      id: '174430',
-      name: 'Gloomhaven',
-      type: 'boardgame',
-      yearpublished: '2017'
-    },
-    {
-      id: '169786',
-      name: 'Scythe',
-      type: 'boardgame', 
-      yearpublished: '2016'
-    },
-    {
-      id: '167791',
-      name: 'Terraforming Mars',
-      type: 'boardgame',
-      yearpublished: '2016'
-    },
-    {
-      id: '224517',
-      name: 'Wingspan',
-      type: 'boardgame',
-      yearpublished: '2019'
-    },
-    {
-      id: '266192',
-      name: 'Gloomhaven: Jaws of the Lion',
-      type: 'boardgame',
-      yearpublished: '2020'
-    }
-  ];
-  
-  if (!query) return mockGames;
-  
-  return mockGames.filter(game => 
-    game.name.toLowerCase().includes(query.toLowerCase())
-  );
 };

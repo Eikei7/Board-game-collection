@@ -1,89 +1,93 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { GameSearch } from './components/GameSearch';
 import { GameList } from './components/GameList';
 import { DigitalShelf } from './components/DigitalShelf';
-import { ImportExport } from './components/ImportExport';
+import { ImportExportModal } from './components/ImportExportModal';
 import { useGameCollection } from './hooks/useGameCollection';
+import { searchGames, getGameDetails } from './utils/bggApi';
 import './App.css';
-
-// Mock games for development - replace with actual API calls when ready
-const MOCK_GAMES = [
-  {
-    id: '174430',
-    name: 'Gloomhaven',
-    yearpublished: '2017',
-    minplayers: '1',
-    maxplayers: '4',
-    minplaytime: '60',
-    maxplaytime: '120',
-    thumbnail: 'https://cf.geekdo-images.com/micro/img/da9h6q5n1foccN4-vfLm0CYvYmg=/fit-in/64x64/pic2437871.jpg'
-  },
-  {
-    id: '169786',
-    name: 'Scythe',
-    yearpublished: '2016',
-    minplayers: '1',
-    maxplayers: '5',
-    minplaytime: '90',
-    maxplaytime: '115',
-    thumbnail: 'https://cf.geekdo-images.com/micro/img/3cQgH9qJVqXNW_2mDacEToVRCkw=/fit-in/64x64/pic3163924.jpg'
-  },
-  {
-    id: '167791',
-    name: 'Terraforming Mars',
-    yearpublished: '2016',
-    minplayers: '1',
-    maxplayers: '5',
-    minplaytime: '120',
-    maxplaytime: '180',
-    thumbnail: 'https://cf.geekdo-images.com/micro/img/FbatK_sqZiW6XpCe8N-VJLREjnE=/fit-in/64x64/pic3536616.jpg'
-  },
-  {
-    id: '224517',
-    name: 'Wingspan',
-    yearpublished: '2019',
-    minplayers: '1',
-    maxplayers: '5',
-    minplaytime: '40',
-    maxplaytime: '70',
-    thumbnail: 'https://cf.geekdo-images.com/micro/img/EGJf3vxOzSP9ZX57208Kzxa6ibA=/fit-in/64x64/pic4458123.jpg'
-  }
-];
 
 function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [pendingImportData, setPendingImportData] = useState('');
   const { collection, addGame, removeGame, importCollection } = useGameCollection();
 
+  useEffect(() => {
+    const handleImportEvent = (e) => {
+      setPendingImportData(JSON.stringify(e.detail.games, null, 2));
+      setShowImportModal(true);
+    };
+
+    window.addEventListener('importGames', handleImportEvent);
+    return () => window.removeEventListener('importGames', handleImportEvent);
+  }, []);
+
   const handleSearch = useCallback(async (query) => {
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      setSearchResults([]);
+      setError('');
+      setLoading(false);
+      return;
+    }
     
     setLoading(true);
     setError('');
+    setSearchResults([]); 
     
     try {
-      // Simulate API call - replace with actual API when you get access
-      await new Promise(resolve => setTimeout(resolve, 300));
+      const basicResults = await searchGames(query);
       
-      const results = MOCK_GAMES.filter(game =>
-        game.name.toLowerCase().includes(query.toLowerCase())
-      );
-      
-      if (results.length === 0) {
-        setSearchResults([]);
+      if (basicResults.length === 0) {
+        setSearchResults([]); 
         setError('No games found. Try a different search.');
-      } else {
-        setSearchResults(results);
+        return;
       }
+
+      const gameIds = basicResults.slice(0, 10).map(game => game.id);
+      const detailedGames = await getGameDetails(gameIds);
+      
+      setSearchResults(detailedGames);
     } catch (err) {
-      setError('Search failed. Please try again.');
+      setError(err.message || 'Search failed. Please try again.');
       setSearchResults([]);
     } finally {
       setLoading(false);
     }
   }, []);
+
+  const [sortOrder, setSortOrder] = useState('name-asc');
+
+const sortedCollection = useMemo(() => {
+  return [...collection].sort((a, b) => {
+    if (sortOrder === 'name-asc') {
+      return a.name.localeCompare(b.name);
+    } else if (sortOrder === 'name-desc') {
+      return b.name.localeCompare(a.name);
+    }
+    return 0;
+  });
+}, [collection, sortOrder]);
+
+  const handleExport = useCallback(() => {
+    const dataStr = JSON.stringify(collection, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `board-game-collection-${new Date().toISOString().split('T')[0]}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  }, [collection]);
+
+  const handleImportConfirm = (games) => {
+    importCollection(games);
+    setShowImportModal(false);
+    setPendingImportData('');
+  };
 
   return (
     <div className="app">
@@ -117,14 +121,22 @@ function App() {
           onAddToCollection={addGame}
         />
         
-        <ImportExport
-          collection={collection}
-          onImport={importCollection}
-        />
-        
         <DigitalShelf
-          collection={collection}
+          collection={sortedCollection}
           onRemoveFromCollection={removeGame}
+          onExport={handleExport}
+          onSortChange={setSortOrder}
+          currentSort={sortOrder}
+        />
+
+        <ImportExportModal
+          isOpen={showImportModal}
+          data={pendingImportData}
+          onClose={() => {
+            setShowImportModal(false);
+            setPendingImportData('');
+          }}
+          onImport={handleImportConfirm}
         />
       </main>
 
