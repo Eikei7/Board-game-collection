@@ -3,9 +3,6 @@ import axios from 'axios';
 const BGG_API_BASE = 'https://boardgamegeek.com/xmlapi2';
 const BGG_API_TOKEN = import.meta.env.VITE_BGG_API_TOKEN;
 
-/**
- * Create axios instance with authorization header
- */
 const apiClient = axios.create({
   baseURL: BGG_API_BASE,
   headers: {
@@ -24,9 +21,8 @@ const parseXML = (xmlString) => {
 };
 
 /**
- * Search for board games by name
- * @param {string} query - The game name to search for
- * @returns {Promise<Array>} Array of game objects with id, name, and year published
+ * @param {string} query
+ * @returns {Promise<Array>}
  */
 export const searchGames = async (query) => {
   try {
@@ -87,7 +83,6 @@ export const getGameDetails = async (gameIds) => {
     items.forEach(item => {
       const id = item.getAttribute('id');
       
-      // Get primary name
       const nameElements = item.querySelectorAll('name');
       let name = 'Unknown';
       nameElements.forEach(el => {
@@ -96,32 +91,26 @@ export const getGameDetails = async (gameIds) => {
         }
       });
 
-      // Get description
+      
       const description = item.querySelector('description')?.textContent || '';
 
-      // Get year published
       const yearpublished = item.querySelector('yearpublished')?.getAttribute('value') || 'N/A';
 
-      // Get player counts
       const minplayers = item.querySelector('minplayers')?.getAttribute('value') || '1';
       const maxplayers = item.querySelector('maxplayers')?.getAttribute('value') || '1';
 
-      // Get playtime
       const minplaytime = item.querySelector('minplaytime')?.getAttribute('value') || '0';
       const maxplaytime = item.querySelector('maxplaytime')?.getAttribute('value') || '0';
 
-      // Get images
       const thumbnail = item.querySelector('thumbnail')?.textContent || '';
       const image = item.querySelector('image')?.textContent || '';
 
-      // Get rating
       let rating = 'N/A';
       const avgRating = item.querySelector('average');
       if (avgRating) {
         rating = avgRating.getAttribute('value');
       }
 
-      // Get categories and mechanics
       const categories = [];
       const mechanics = [];
       const links = item.querySelectorAll('link');
