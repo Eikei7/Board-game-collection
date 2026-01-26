@@ -62,11 +62,20 @@ body {
 
 .app-footer {
   background: #f9fafb;
-  padding: 1.5rem;
+  padding: 1.5rem 1rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   color: #6b7280;
   font-size: 0.9rem;
   border-top: 1px solid #e5e7eb;
+}
+
+.app-footer img {
+  max-width: 200px;
+  height: auto;
 }
 
 .app-footer p {
@@ -86,16 +95,22 @@ body {
 }
 
 .app-subtitle {
-  font-size: 1.3rem;
-  opacity: 0.9;
+  /* Skalar mellan 1rem (16px) på små skärmar och 1.3rem (~21px) på stora */
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  opacity: 0.85; /* Sänkt något för bättre hierarki mot titeln */
   font-family: 'Playfair Display', serif;
+  font-style: italic; /* Ofta snyggt på undertitlar i Playfair */
+  line-height: 1.4;
+  max-width: 600px; /* Förhindrar att texten blir för bred och svårläst på desktop */
+  margin: 0 auto;   /* Centrerar den om texten radbryts */
 }
 
 .app-title {
-  font-size: 3.5rem;
+  font-size: clamp(2rem, 8vw, 3.5rem); 
   font-weight: 800;
   margin-bottom: 0.5rem;
   font-family: 'Playfair Display', serif;
+  line-height: 1.2;
 }
 
 .clear-button {
@@ -369,6 +384,7 @@ body {
 
 .games-grid, .collection-grid {
   display: grid;
+  /* Ändra 280px till t.ex. 140px för att tillåta två kolumner på mobilen */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
 }
@@ -570,5 +586,19 @@ body {
 
   .collection-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .collection-list .collection-thumbnail {
+    width: 50px; /* Mindre bild på mobilen */
+    height: 50px;
+    margin-right: 1rem;
+  }
+
+  .collection-item-title {
+    font-size: 0.9rem; /* Lite mindre text */
+  }
+
+  .year-text {
+    font-size: 0.75rem; /* Kompaktare info */
   }
 }
