@@ -16,9 +16,16 @@ export function useGameCollection(storageKey = 'boardGameCollection') {
   }, [collection, storageKey]);
 
   const addGame = useCallback((game) => {
-    setCollection(prev => 
-      prev.some(g => g.id === game.id) ? prev : [...prev, game]
-    );
+    setCollection(prev => {
+      if (prev.some(g => g.id === game.id)) return prev;
+      
+      const gameWithDate = {
+        ...game,
+        addedAt: new Date().toISOString().split('T')[0]
+      };
+      
+      return [...prev, gameWithDate];
+    });
   }, []);
 
   const removeGame = useCallback((gameId) => {

@@ -151,7 +151,7 @@ body {
 }
 
 .collection-item-title {
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 500;
   font-family: 'Geom', sans-serif;
   color: #1f2937;
@@ -184,11 +184,11 @@ body {
 }
 
 .collection-list .collection-thumbnail {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   margin-right: 1.5rem;
   object-fit: cover;
-  border-radius: 8px;
+  margin-bottom: 0;
 }
 
 .collection-list .collection-item-info {

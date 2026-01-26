@@ -122,7 +122,14 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
                 />
               )}
               <div className="collection-item-info">
-                <h4 className="collection-item-title">{game.name} <span className="year-text">({game.yearpublished}) | {game.minplayers}-{game.maxplayers} players | {game.minplaytime}-{game.maxplaytime} mins</span></h4>
+                <div className="collection-text-wrapper">
+                  <h4 className="collection-item-title">{game.name}</h4>
+                  <span className="year-text">
+                  {game.yearpublished} | {game.minplayers}-{game.maxplayers} players | {game.minplaytime}-{game.maxplaytime} mins 
+                  {game.addedAt && ` | Added ${game.addedAt}`}
+                </span>
+                </div>
+                
                 <button 
                   onClick={(e) => {
                     e.stopPropagation();
