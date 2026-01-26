@@ -598,6 +598,10 @@ body {
     font-size: 0.9rem; /* Lite mindre text */
   }
 
+  .digital-shelf {
+    padding: 1rem;
+  }
+
   .year-text {
     font-size: 0.75rem; /* Kompaktare info */
   }
