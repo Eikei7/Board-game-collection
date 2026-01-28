@@ -12,12 +12,12 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
   return (
     <div className="digital-shelf">
       <div className="shelf-header">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div className="shelf-header-inner">
           <div>
-            <h2 className="section-title" style={{ marginBottom: '0.25rem' }}>My Games ({collection.length})</h2>
+            <h2 className="section-title">My Games ({collection.length})</h2>
           </div>
           
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <div className="shelf-actions">
             
             {collection.length > 0 && (
               <div className="view-container" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '12px', padding: '2px', marginRight: '0.5rem' }}>
@@ -59,19 +59,19 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
               </div>
             )}
 
-            <button onClick={onExport} className="export-button" style={{ padding: '0.5rem 1rem', marginBottom: 0 }}>
-              <Download size={16} />
-              Export
-            </button>
-            
-            <button 
-              onClick={handleImportClick}
-              className="export-button" 
-              style={{ padding: '0.5rem 1rem', marginBottom: 0, background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)' }}
-            >
-              <Upload size={16} />
-              Import
-            </button>
+            <button onClick={onExport} className="export-button">
+            <Download size={16} />
+            <span className="button-text">Export</span>
+          </button>
+
+          <button 
+            onClick={handleImportClick}
+            className="export-button" 
+            style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)' }}
+          >
+            <Upload size={16} />
+            <span className="button-text">Import</span>
+          </button>
 
             <input
               ref={fileInputRef}

@@ -147,6 +147,7 @@ body {
 }
 
 .collection-item {
+  position: relative;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
@@ -206,10 +207,7 @@ body {
 }
 
 .collection-list .collection-item-info {
-  display: flex;
-  flex: 1;
-  justify-content: space-between;
-  align-items: center;
+  display: block; 
   text-align: left;
 }
 
@@ -456,6 +454,10 @@ body {
 }
 
 .remove-button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  z-index: 10;
   background: #fee2e2;
   border: none;
   border-radius: 6px;
@@ -546,6 +548,21 @@ body {
   margin-bottom: 1.5rem;
 }
 
+.shelf-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.shelf-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .skeleton-img, .skeleton-line {
   background: #e5e7eb;
   border-radius: 8px;
@@ -578,6 +595,10 @@ body {
     padding: 1.5rem 1rem;
   }
   
+  .button-text {
+    display: none;
+  }
+
   .search-form {
     flex-direction: column;
   }
@@ -598,6 +619,42 @@ body {
 
   .digital-shelf {
     padding: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.4rem;
+    width: 100%;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .shelf-actions {
+    display: grid !important; /* Använd grid för att kontrollera knapparna */
+    grid-template-columns: repeat(4, 1fr); /* 4 jämna kolumner för alla verktyg */
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .shelf-header > div {
+    flex-direction: column !important; /* Tvingar rubrik överst, knappar under */
+    align-items: flex-start !important; /* Vänsterställer titeln */
+    gap: 1rem !important;
+  }
+  .shelf-header div[style*="display: flex"] {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .view-container, .sort-container {
+    grid-column: span 1; 
+    justify-content: center;
+    width: 100% !important;
+  }
+
+  .export-button {
+    grid-column: span 1;
+    width: 100% !important;
   }
 
   .year-text {
