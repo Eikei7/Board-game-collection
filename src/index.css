@@ -95,14 +95,13 @@ body {
 }
 
 .app-subtitle {
-  /* Skalar mellan 1rem (16px) på små skärmar och 1.3rem (~21px) på stora */
   font-size: clamp(1rem, 3vw, 1.3rem);
-  opacity: 0.85; /* Sänkt något för bättre hierarki mot titeln */
+  opacity: 0.85;
   font-family: 'Playfair Display', serif;
-  font-style: italic; /* Ofta snyggt på undertitlar i Playfair */
+  font-style: italic;
   line-height: 1.4;
-  max-width: 600px; /* Förhindrar att texten blir för bred och svårläst på desktop */
-  margin: 0 auto;   /* Centrerar den om texten radbryts */
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .app-title {
@@ -348,7 +347,7 @@ body {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Gör att innehållet fyller ut kortet */
+  flex-grow: 1;
   justify-content: space-between;
 }
 
@@ -384,7 +383,6 @@ body {
 
 .games-grid, .collection-grid {
   display: grid;
-  /* Ändra 280px till t.ex. 140px för att tillåta två kolumner på mobilen */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
 }
@@ -589,13 +587,13 @@ body {
   }
 
   .collection-list .collection-thumbnail {
-    width: 50px; /* Mindre bild på mobilen */
+    width: 50px;
     height: 50px;
     margin-right: 1rem;
   }
 
   .collection-item-title {
-    font-size: 0.9rem; /* Lite mindre text */
+    font-size: 0.9rem;
   }
 
   .digital-shelf {
@@ -603,6 +601,6 @@ body {
   }
 
   .year-text {
-    font-size: 0.75rem; /* Kompaktare info */
+    font-size: 0.75rem;
   }
 }
