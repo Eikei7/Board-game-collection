@@ -118,12 +118,19 @@ body {
   line-height: 1.2;
 }
 
+.button-text {
+  font-family: 'Geom', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
 .clear-button {
   padding: 1rem 2rem;
   background: transparent;
   color: #0d9488;
   border: 2px solid #0d9488;
   border-radius: 12px;
+  font-family: 'Geom', sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -485,6 +492,7 @@ body {
 
 .search-button {
   padding: 1rem 2rem;
+  font-family: 'Geom', sans-serif;
   background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
   color: white;
   border: none;
