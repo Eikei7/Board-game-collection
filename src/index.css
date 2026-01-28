@@ -1,7 +1,6 @@
-/* Imports & Globala stilar */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url(https://fonts.googleapis.com/css?family=Geom:300,regular,500,600,700,800,900,300italic,italic,500italic,600italic,700italic,800italic,900italic);
-@import url('https://fonts.googleapis.com/css?family=Playfair+Display:regular,500,600,700,800,900,italic,500italic,600italic,700italic,800italic,900italic');
+@import url('https://fonts.googleapis.com/css?family=Geom:300,regular,500,600,700,800');
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display:regular,500,600,700,800');
 
 * {
   margin: 0;
@@ -21,7 +20,6 @@ body {
   50% { opacity: 0.5; }
 }
 
-/* Sorterade klasser */
 
 .add-button {
   display: flex;
@@ -58,6 +56,13 @@ body {
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   overflow: hidden;
+}
+
+.app-description {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  opacity: 0.7;
+  font-family: 'Geom', sans-serif;
 }
 
 .app-footer {

@@ -102,7 +102,8 @@ const sortedCollection = useMemo(() => {
     <div className="app">
       <header className="app-header">
         <h1 className="app-title">Board Game Collection</h1>
-        <p className="app-subtitle">Your digital board game shelf</p>
+        <p className="app-subtitle">- Your digital board game shelf -</p>
+        <p className="app-description">All games are saved only in this browser. Remember to back up your collection regularly!</p>
       </header>
 
       <main className="app-main">
