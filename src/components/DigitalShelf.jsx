@@ -18,9 +18,8 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
           </div>
           
           <div className="shelf-actions">
-            
             {collection.length > 0 && (
-              <div className="view-container" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '12px', padding: '2px', marginRight: '0.5rem' }}>
+              <div className="view-container" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '12px', padding: '2px' }}>
                 <button 
                   onClick={() => setViewMode('grid')}
                   title="Grid View"
@@ -42,7 +41,6 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
               <div className="sort-container" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '12px', padding: '2px' }}>
                 <button 
                   onClick={() => onSortChange('name-asc')}
-                  className={`sort-toggle ${currentSort === 'name-asc' ? 'active' : ''}`}
                   title="Sort A-Z"
                   style={getSortButtonStyle(currentSort === 'name-asc')}
                 >
@@ -50,7 +48,6 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
                 </button>
                 <button 
                   onClick={() => onSortChange('name-desc')}
-                  className={`sort-toggle ${currentSort === 'name-desc' ? 'active' : ''}`}
                   title="Sort Z-A"
                   style={getSortButtonStyle(currentSort === 'name-desc')}
                 >
@@ -60,18 +57,18 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
             )}
 
             <button onClick={onExport} className="export-button">
-            <Download size={16} />
-            <span className="button-text">Export</span>
-          </button>
+              <Download size={16} />
+              <span className="button-text">Export</span>
+            </button>
 
-          <button 
-            onClick={handleImportClick}
-            className="export-button" 
-            style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)' }}
-          >
-            <Upload size={16} />
-            <span className="button-text">Import</span>
-          </button>
+            <button 
+              onClick={handleImportClick}
+              className="export-button" 
+              style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)' }}
+            >
+              <Upload size={16} />
+              <span className="button-text">Import</span>
+            </button>
 
             <input
               ref={fileInputRef}
@@ -113,22 +110,47 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
       ) : (
         <div className={viewMode === 'grid' ? 'collection-grid' : 'collection-list'}>
           {collection.map((game) => (
-            <div key={game.id} className="collection-item">
-              {game.image && (
+            <div 
+              key={game.id} 
+              className={viewMode === 'grid' ? 'collection-item-grid' : 'collection-item'}
+              style={viewMode === 'grid' && game.image ? { 
+                backgroundImage: `url("${game.image}")`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat'
+              } : {}}
+            >
+              {/* Overlay for readability in grid view */}
+              {viewMode === 'grid' && <div className="collection-item-overlay" />}
+              
+              {/* Thumbnail only shows in list view */}
+              {viewMode === 'list' && (game.image || game.thumbnail) && (
                 <img 
-                  src={game.image} 
+                  src={game.image || game.thumbnail}
                   alt={game.name}
                   className="collection-thumbnail"
                 />
               )}
-              <div className="collection-item-info">
-                <div className="collection-text-wrapper">
-                  <h4 className="collection-item-title">{game.name}</h4>
-                  <span className="year-text">
-                  {game.yearpublished} | {game.minplayers}-{game.maxplayers} players | {game.minplaytime}-{game.maxplaytime} mins 
-                  {game.addedAt && ` | Added ${game.addedAt}`}
-                </span>
-                </div>
+
+              <div className={viewMode === 'grid' ? 'collection-item-info-grid' : 'collection-item-info'}>
+                {viewMode === 'list' && (
+                  <div className="collection-text-wrapper">
+                    <h4 className="collection-item-title">{game.name}</h4>
+                    <span className="year-text">
+                      {game.yearpublished} | {game.minplayers}-{game.maxplayers} players | {game.minplaytime}-{game.maxplaytime} mins 
+                      {game.addedAt && ` | Added ${game.addedAt}`}
+                    </span>
+                  </div>
+                )}
+                
+                {viewMode === 'grid' && (
+                  <div className="collection-grid-content">
+                    <h4 className="collection-item-title-grid">{game.name}</h4>
+                    <span className="collection-grid-meta">
+                      {game.yearpublished} | {game.minplayers}-{game.maxplayers} players | {game.minplaytime}-{game.maxplaytime} min
+                    </span>
+                  </div>
+                )}
                 
                 <button 
                   onClick={(e) => {
@@ -160,5 +182,6 @@ const getSortButtonStyle = (isActive) => ({
   color: isActive ? '#0d9488' : '#6b7280',
   cursor: 'pointer',
   boxShadow: isActive ? '0 2px 4px rgba(0,0,0,0.1)' : 'none',
-  transition: 'all 0.2s ease'
+  transition: 'all 0.2s ease',
+  flex: 1
 });

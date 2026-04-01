@@ -21,7 +21,6 @@ body {
   50% { opacity: 0.5; }
 }
 
-
 .add-button {
   display: flex;
   align-items: center;
@@ -91,7 +90,7 @@ body {
 .app-header {
   background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
   color: white;
-  padding: 2rem;
+  padding: 4rem;
   text-align: center;
 }
 
@@ -99,16 +98,6 @@ body {
   margin: 0 auto;
   padding: 2rem;
 }
-
-/* .app-subtitle {
-  font-size: clamp(1rem, 3vw, 1.3rem);
-  opacity: 0.85;
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  line-height: 1.4;
-  max-width: 600px;
-  margin: 0 auto;
-} */
 
 .app-title {
   font-size: clamp(2rem, 10vw, 3.5rem); 
@@ -159,40 +148,110 @@ body {
   grid-template-columns: repeat(4, 1fr);
 }
 
+.collection-item-grid {
+  position: relative;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  background-color: #e5e7eb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.collection-item-grid:hover {
+  border-color: #0d9488;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.collection-item-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  z-index: 1;
+}
+
+.collection-item-info-grid {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 1rem;
+  gap: 0.5rem;
+  width: 100%;
+  flex: 1;
+}
+
+.collection-grid-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  /* flex: 1; */
+  width: 100%;
+}
+
+.collection-item-title-grid {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.2;
+  font-family: 'Geom', serif;
+  font-weight: 500;
+}
+
+.collection-grid-meta {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
 .collection-item {
   position: relative;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-align: center;
+  text-align: left;
 }
 
 .collection-item-info {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 0.5rem;
   width: 100%;
 }
 
 .collection-item-title {
-  font-size: 1.2rem;
-  font-weight: 500;
-  font-family: 'Geom', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: #1f2937;
   word-break: break-word;
   overflow-wrap: break-word;
   flex: 1;
   min-width: 0;
-  text-align: center;
 }
 
 .collection-item:hover {
   border-color: #0d9488;
   transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .collection-list {
@@ -217,15 +276,13 @@ body {
   margin-right: 1.5rem;
   object-fit: cover;
   margin-bottom: 0;
+  border-radius: 6px;
 }
 
 .collection-list .collection-item-info {
-  display: block; 
-  text-align: left;
-}
-
-.collection-list .collection-item-title {
-  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .collection-thumbnail {
@@ -234,6 +291,11 @@ body {
   object-fit: cover;
   border-radius: 6px;
   margin-bottom: 0.75rem;
+}
+
+.collection-text-wrapper {
+  flex: 1;
+  min-width: 0;
 }
 
 .credits {
@@ -310,16 +372,7 @@ body {
   background: #99f6e4;
 }
 
-/* .game-card {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  display: flex;
-  gap: 1.5rem;
-  transition: all 0.3s ease;
-} */
-
- .game-card {
+.game-card {
   padding: 1rem;
   background: white;
   border-radius: 12px;
@@ -338,12 +391,6 @@ body {
   display: flex;
   flex-direction: column;
 }
-
-/* .game-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-} */
 
 .game-card.skeleton {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -371,7 +418,7 @@ body {
   margin-bottom: 3rem;
 }
 
- .game-thumbnail {
+.game-thumbnail {
   width: 120px;
   height: 120px;
   object-fit: cover;
@@ -468,13 +515,13 @@ body {
 
 .remove-button {
   position: absolute;
-  right: 5px;
-  top: 5px;
+  right: 0.5rem;
+  top: 0.5rem;
   z-index: 10;
   background: #fee2e2;
   border: none;
   border-radius: 6px;
-  padding: 0.25rem;
+  padding: 0.5rem;
   color: #dc2626;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -484,6 +531,12 @@ body {
   min-width: 32px;
   min-height: 32px;
   flex-shrink: 0;
+}
+
+.collection-item-grid .remove-button {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
 }
 
 .remove-button:hover {
@@ -621,6 +674,10 @@ body {
     grid-template-columns: repeat(1, 1fr);
   }
 
+  .collection-item-grid {
+    height: 200px;
+  }
+
   .collection-list .collection-thumbnail {
     width: 50px;
     height: 50px;
@@ -642,17 +699,18 @@ body {
   }
 
   .shelf-actions {
-    display: grid !important; /* Använd grid för att kontrollera knapparna */
-    grid-template-columns: repeat(4, 1fr); /* 4 jämna kolumner för alla verktyg */
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
     width: 100%;
     gap: 0.5rem;
   }
 
   .shelf-header > div {
-    flex-direction: column !important; /* Tvingar rubrik överst, knappar under */
-    align-items: flex-start !important; /* Vänsterställer titeln */
+    flex-direction: column !important;
+    align-items: flex-start !important;
     gap: 1rem !important;
   }
+
   .shelf-header div[style*="display: flex"] {
     display: grid !important;
     grid-template-columns: 1fr 1fr;
