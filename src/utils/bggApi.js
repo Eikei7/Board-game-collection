@@ -10,28 +10,15 @@ const apiClient = axios.create({
   }
 });
 
-/**
- * Parse XML response using DOMParser (browser-native)
- * @param {string} xmlString - The XML string to parse
- * @returns {Document} Parsed XML document
- */
 const parseXML = (xmlString) => {
   const parser = new DOMParser();
   return parser.parseFromString(xmlString, 'application/xml');
 };
 
-/**
- * @param {string} query
- * @returns {Promise<Array>}
- */
 export const searchGames = async (query) => {
   try {
     const response = await apiClient.get('/search', {
-      params: {
-        query,
-        type: 'boardgame',
-        exact: 0
-      }
+      params: { query, type: 'boardgame', exact: 0 }
     });
 
     const xmlDoc = parseXML(response.data);
@@ -66,14 +53,9 @@ export const searchGames = async (query) => {
  */
 export const getGameDetails = async (gameIds) => {
   try {
-    // Can fetch multiple games at once by comma-separated IDs
     const ids = Array.isArray(gameIds) ? gameIds.join(',') : gameIds;
-
     const response = await apiClient.get('/thing', {
-      params: {
-        id: ids,
-        stats: 1 // Include rating statistics
-      }
+      params: { id: ids, stats: 1 }
     });
 
     const xmlDoc = parseXML(response.data);

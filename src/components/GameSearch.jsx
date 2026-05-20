@@ -13,11 +13,9 @@ export function GameSearch({ onSearch }) {
     setLoading(false);
   }, [query, onSearch]);
 
-  const handleClear = useCallback(async () => {
+  const handleClear = useCallback(() => {
     setQuery('');
-    setLoading(true);
-    await onSearch('');
-    setLoading(false);
+    onSearch('');
   }, [onSearch]);
 
   const handleKeyPress = useCallback((e) => {
