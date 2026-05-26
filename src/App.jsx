@@ -15,7 +15,6 @@ function App() {
   const [showImportModal, setShowImportModal] = useState(false);
   const [pendingImportData, setPendingImportData] = useState('');
   const { collection, addGame, removeGame, importCollection } = useGameCollection();
-  const collectionIds = useMemo(() => new Set(collection.map(g => g.id)), [collection]);
 
   useEffect(() => {
     const handleImportEvent = (e) => {
@@ -127,7 +126,7 @@ const sortedCollection = useMemo(() => {
 
         <GameList
           games={searchResults}
-          collectionIds={collectionIds}
+          collection={collection}
           loading={loading}
           onAddToCollection={addGame}
         />

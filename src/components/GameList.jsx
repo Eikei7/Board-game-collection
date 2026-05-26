@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { GameCard } from './GameCard';
 import { GameCardSkeleton } from './GameCardSkeleton';
 
-export const GameList = memo(({ games, collectionIds, loading, onAddToCollection }) => {
+export const GameList = memo(({ games, collection, loading, onAddToCollection }) => {
   if (!loading && games.length === 0) {
     return null;
   }
@@ -20,7 +20,7 @@ export const GameList = memo(({ games, collectionIds, loading, onAddToCollection
             <GameCard
               key={game.id}
               game={game}
-              isAdded={collectionIds.has(game.id)}
+              isAdded={collection.some(g => g.id === game.id)}
               onAdd={() => onAddToCollection(game)}
             />
           ))}
