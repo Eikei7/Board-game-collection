@@ -42,13 +42,39 @@ export const ImportExportModal = memo(({ isOpen, data, onClose, onImport }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h3 className="modal-title">Import Collection</h3>
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000
+    }}>
+      <div style={{
+        background: 'white',
+        borderRadius: '16px',
+        padding: '2rem',
+        maxWidth: '500px',
+        width: '90%',
+        maxHeight: '80vh',
+        overflow: 'auto',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <h3 style={{ fontSize: '1.3rem', fontWeight: 600, color: '#1f2937' }}>Import Collection</h3>
           <button
             onClick={closeModal}
-            className="modal-close-button"
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#6b7280',
+              padding: 0
+            }}
           >
             <X size={24} />
           </button>
@@ -60,26 +86,37 @@ export const ImportExportModal = memo(({ isOpen, data, onClose, onImport }) => {
           placeholder='Paste your JSON data here or upload a file...'
           className="import-textarea"
           rows="10"
+          style={{ marginBottom: '1rem' }}
         />
         
         {error && (
-          <div className="import-error">
+          <div className="import-error" style={{ marginBottom: '1rem' }}>
             <AlertCircle size={16} />
             {error}
           </div>
         )}
         
-        <div className="modal-actions">
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button 
             onClick={handleImport} 
             disabled={!importDataToUse.trim()}
             className="import-button"
+            style={{ flex: 1, marginBottom: 0 }}
           >
             Import Collection
           </button>
           <button
             onClick={closeModal}
-            className="modal-cancel-button"
+            style={{
+              flex: 1,
+              padding: '1rem',
+              background: '#e5e7eb',
+              color: '#1f2937',
+              border: 'none',
+              borderRadius: '8px',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
           >
             Cancel
           </button>
