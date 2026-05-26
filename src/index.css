@@ -445,6 +445,44 @@ body {
   gap: 1rem;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.pagination-button {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.pagination-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pagination-button:not(:disabled):hover {
+  opacity: 0.85;
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+  color: #6b7280;
+  min-width: 90px;
+  text-align: center;
+}
+
 .import-divider {
   text-align: center;
   color: #6b7280;
@@ -711,15 +749,8 @@ body {
     gap: 1rem !important;
   }
 
-  .shelf-header div[style*="display: flex"] {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-    width: 100%;
-  }
-
   .view-container, .sort-container {
-    grid-column: span 1; 
+    grid-column: span 1;
     justify-content: center;
     width: 100% !important;
   }
@@ -732,4 +763,95 @@ body {
   .year-text {
     font-size: 0.75rem;
   }
+}
+
+/* View / Sort container base */
+.view-container, .sort-container {
+  display: flex;
+  align-items: center;
+  background: #f3f4f6;
+  border-radius: 12px;
+  padding: 2px;
+}
+
+/* Search */
+.search-button-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.search-error {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.modal-actions .import-button {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.modal-cancel-button {
+  flex: 1;
+  padding: 1rem;
+  background: #e5e7eb;
+  color: #1f2937;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
 }

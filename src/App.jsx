@@ -1,8 +1,10 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, lazy, Suspense } from 'react';
 import { GameSearch } from './components/GameSearch';
 import { GameList } from './components/GameList';
 import { DigitalShelf } from './components/DigitalShelf';
-import { ImportExportModal } from './components/ImportExportModal';
+const ImportExportModal = lazy(() =>
+  import('./components/ImportExportModal').then(m => ({ default: m.ImportExportModal }))
+);
 import { useGameCollection } from './hooks/useGameCollection';
 import { searchGames, getGameDetails } from './utils/bggApi';
 import bggLogo from './assets/powered_by_BGG_04_XL.png';
@@ -57,7 +59,7 @@ function App() {
       return 0;
     });
 
-    const gameIds = prioritizedResults.slice(0, 20).map(game => game.id);
+    const gameIds = prioritizedResults.slice(0, 27).map(game => game.id);
     const detailedGames = await getGameDetails(gameIds);
     
     setSearchResults(detailedGames);
@@ -112,14 +114,7 @@ const sortedCollection = useMemo(() => {
           <GameSearch onSearch={handleSearch} />
           
           {error && (
-            <div style={{ 
-              marginTop: '1rem', 
-              padding: '0.75rem',
-              background: '#fee2e2',
-              color: '#dc2626',
-              borderRadius: '8px',
-              textAlign: 'center'
-            }}>
+            <div className="search-error">
               {error}
             </div>
           )}
@@ -140,15 +135,19 @@ const sortedCollection = useMemo(() => {
           currentSort={sortOrder}
         />
 
-        <ImportExportModal
-          isOpen={showImportModal}
-          data={pendingImportData}
-          onClose={() => {
-            setShowImportModal(false);
-            setPendingImportData('');
-          }}
-          onImport={handleImportConfirm}
-        />
+        <Suspense fallback={null}>
+          {showImportModal && (
+            <ImportExportModal
+              isOpen={showImportModal}
+              data={pendingImportData}
+              onClose={() => {
+                setShowImportModal(false);
+                setPendingImportData('');
+              }}
+              onImport={handleImportConfirm}
+            />
+          )}
+        </Suspense>
       </main>
 
       <footer className="app-footer">

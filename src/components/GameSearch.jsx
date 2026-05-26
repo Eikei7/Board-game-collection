@@ -1,16 +1,18 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Search, Loader2, X } from 'lucide-react';
 
 export function GameSearch({ onSearch }) {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const submittingRef = useRef(false);
 
   const handleSubmit = useCallback(async () => {
-    if (!query.trim()) return;
-    
+    if (!query.trim() || submittingRef.current) return;
+    submittingRef.current = true;
     setLoading(true);
     await onSearch(query);
     setLoading(false);
+    submittingRef.current = false;
   }, [query, onSearch]);
 
   const handleClear = useCallback(() => {
@@ -39,7 +41,7 @@ export function GameSearch({ onSearch }) {
     />
   </div>
 
-  <div style={{ display: 'flex', gap: '1rem' }}>
+  <div className="search-button-row">
     <button 
       onClick={handleSubmit}
       disabled={loading || !query.trim()}

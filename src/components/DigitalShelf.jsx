@@ -19,7 +19,7 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
           
           <div className="shelf-actions">
             {collection.length > 0 && (
-              <div className="view-container" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '12px', padding: '2px' }}>
+              <div className="view-container">
                 <button 
                   onClick={() => setViewMode('grid')}
                   title="Grid View"
@@ -38,7 +38,7 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
             )}
 
             {collection.length > 0 && (
-              <div className="sort-container" style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '12px', padding: '2px' }}>
+              <div className="sort-container">
                 <button 
                   onClick={() => onSortChange('name-asc')}
                   title="Sort A-Z"
@@ -64,7 +64,6 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
             <button 
               onClick={handleImportClick}
               className="export-button" 
-              style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)' }}
             >
               <Upload size={16} />
               <span className="button-text">Import</span>
