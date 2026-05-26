@@ -1,5 +1,5 @@
 import { memo, useRef, useState } from 'react';
-import { Trash2, Download, Upload, ArrowUpAZ, ArrowDownAZ, LayoutGrid, List } from 'lucide-react';
+import { Trash2, Download, Upload, ArrowUpAZ, ArrowDownAZ, LayoutGrid, List, ArrowUp01, ArrowDown01 } from 'lucide-react';
 
 export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport, onSortChange, currentSort }) => {
   const [viewMode, setViewMode] = useState('grid');
@@ -52,6 +52,20 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
                   style={getSortButtonStyle(currentSort === 'name-desc')}
                 >
                   <ArrowUpAZ size={18} />
+                </button>
+                <button 
+                  onClick={() => onSortChange('playtime-asc')}
+                  title="Sort by playtime (short to long)"
+                  style={getSortButtonStyle(currentSort === 'playtime-asc')}
+                >
+                  <ArrowUp01 size={18} />
+                </button>
+                <button 
+                  onClick={() => onSortChange('playtime-desc')}
+                  title="Sort by playtime (long to short)"
+                  style={getSortButtonStyle(currentSort === 'playtime-desc')}
+                >
+                  <ArrowDown01 size={18} />
                 </button>
               </div>
             )}

@@ -75,6 +75,10 @@ const sortedCollection = useMemo(() => {
       return a.name.localeCompare(b.name);
     } else if (sortOrder === 'name-desc') {
       return b.name.localeCompare(a.name);
+    } else if (sortOrder === 'playtime-asc') {
+      return parseInt(a.maxplaytime || 0) - parseInt(b.maxplaytime || 0);
+    } else if (sortOrder === 'playtime-desc') {
+      return parseInt(b.maxplaytime || 0) - parseInt(a.maxplaytime || 0);
     }
     return 0;
   });
