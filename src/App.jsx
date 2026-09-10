@@ -4,7 +4,7 @@ import { GameList } from './components/GameList';
 import { DigitalShelf } from './components/DigitalShelf';
 import { ImportExportModal } from './components/ImportExportModal';
 import { useGameCollection } from './hooks/useGameCollection';
-import { searchGames, getGameDetails } from './utils/bggApi';
+import { searchGames, getGameDetails, getRankedSearchResults, formatSearchFeedback } from './utils/bggApi';
 import bggLogo from './assets/powered_by_BGG_04_XL.png';
 import './App.css';
 
@@ -37,31 +37,21 @@ function App() {
 
   try {
     const basicResults = await searchGames(query);
+    const prioritizedResults = getRankedSearchResults(query, basicResults);
 
-    const filteredResults = basicResults.filter(game => 
-      game.name.toLowerCase().includes(query.toLowerCase())
-    );
-
-    if (filteredResults.length === 0) {
+    if (prioritizedResults.length === 0) {
       setSearchResults([]);
-      setError(`No games found that exactly match "${query}".`);
+      setError(formatSearchFeedback(query, 0));
       return;
     }
 
-    const prioritizedResults = filteredResults.sort((a, b) => {
-      const aStarts = a.name.toLowerCase().startsWith(query.toLowerCase());
-      const bStarts = b.name.toLowerCase().startsWith(query.toLowerCase());
-      if (aStarts && !bStarts) return -1;
-      if (!aStarts && bStarts) return 1;
-      return 0;
-    });
-
     const gameIds = prioritizedResults.slice(0, 20).map(game => game.id);
     const detailedGames = await getGameDetails(gameIds);
-    
+
     setSearchResults(detailedGames);
-  } catch (err) {
-    setError('Search failed.');
+    setError(formatSearchFeedback(query, detailedGames.length));
+  } catch {
+    setError('Search failed. Please try again.');
   } finally {
     setLoading(false);
   }

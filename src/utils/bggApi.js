@@ -1,12 +1,43 @@
 import axios from 'axios';
 
 const BGG_API_BASE = 'https://boardgamegeek.com/xmlapi2';
-const BGG_API_TOKEN = import.meta.env.VITE_BGG_API_TOKEN;
+
+export const getBggApiToken = () => String(import.meta.env.VITE_BGG_API_TOKEN ?? '').trim();
+
+export const ensureBggApiToken = (token = getBggApiToken()) => {
+  if (!token || !String(token).trim()) {
+    throw new Error('Missing VITE_BGG_API_TOKEN. Add a BoardGameGeek API token before searching games.');
+  }
+
+  return token;
+};
+
+export const getApiErrorMessage = (error) => {
+  if (!error) return 'The BoardGameGeek service is unavailable right now.';
+
+  if (error.code === 'ERR_NETWORK') {
+    return 'BoardGameGeek is temporarily unavailable. Please try again in a moment.';
+  }
+
+  if (error.response?.status === 401) {
+    return 'The BoardGameGeek token is invalid or expired. Please update the API token.';
+  }
+
+  if (error.response?.status === 429) {
+    return 'BoardGameGeek is rate-limiting requests due to too many requests. Please wait a moment and try again.';
+  }
+
+  if (error.response?.status >= 500) {
+    return 'BoardGameGeek is currently experiencing server issues. Please try again later.';
+  }
+
+  return 'Something went wrong while loading BoardGameGeek data. Please try again.';
+};
 
 const apiClient = axios.create({
   baseURL: BGG_API_BASE,
   headers: {
-    'Authorization': `Bearer ${BGG_API_TOKEN}`
+    'Authorization': `Bearer ${getBggApiToken()}`
   }
 });
 
@@ -20,12 +51,55 @@ const parseXML = (xmlString) => {
   return parser.parseFromString(xmlString, 'application/xml');
 };
 
+export const getRankedSearchResults = (query, results = []) => {
+  const normalizedQuery = query.trim().toLowerCase();
+
+  if (!normalizedQuery) {
+    return [];
+  }
+
+  return [...results]
+    .filter((game) => {
+      const name = String(game?.name ?? '').toLowerCase();
+      return name.includes(normalizedQuery);
+    })
+    .sort((a, b) => {
+      const aName = String(a.name ?? '').toLowerCase();
+      const bName = String(b.name ?? '').toLowerCase();
+
+      const aExact = aName === normalizedQuery ? 0 : aName.startsWith(normalizedQuery) ? 1 : 2;
+      const bExact = bName === normalizedQuery ? 0 : bName.startsWith(normalizedQuery) ? 1 : 2;
+
+      if (aExact !== bExact) {
+        return aExact - bExact;
+      }
+
+      return aName.localeCompare(bName);
+    });
+};
+
+export const formatSearchFeedback = (query, count) => {
+  const trimmedQuery = String(query ?? '').trim();
+
+  if (!trimmedQuery) {
+    return '';
+  }
+
+  if (count === 0) {
+    return `No games found for "${trimmedQuery}".`;
+  }
+
+  return `Showing ${count} result${count === 1 ? '' : 's'} for "${trimmedQuery}".`;
+};
+
 /**
  * @param {string} query
  * @returns {Promise<Array>}
  */
 export const searchGames = async (query) => {
   try {
+    ensureBggApiToken();
+
     const response = await apiClient.get('/search', {
       params: {
         query,
@@ -33,6 +107,10 @@ export const searchGames = async (query) => {
         exact: 0
       }
     });
+
+    if (!response || !response.data) {
+      throw new Error('Empty response from BoardGameGeek.');
+    }
 
     const xmlDoc = parseXML(response.data);
     const items = xmlDoc.querySelectorAll('item');
@@ -54,8 +132,12 @@ export const searchGames = async (query) => {
 
     return results;
   } catch (error) {
+    const message = error instanceof Error && error.message.includes('VITE_BGG_API_TOKEN')
+      ? error.message
+      : getApiErrorMessage(error);
+
     console.error('Error searching games:', error);
-    throw new Error('Failed to search games. Please try again.');
+    throw new Error(message);
   }
 };
 
@@ -66,15 +148,24 @@ export const searchGames = async (query) => {
  */
 export const getGameDetails = async (gameIds) => {
   try {
-    // Can fetch multiple games at once by comma-separated IDs
+    ensureBggApiToken();
+
     const ids = Array.isArray(gameIds) ? gameIds.join(',') : gameIds;
+
+    if (!ids || !String(ids).trim()) {
+      return [];
+    }
 
     const response = await apiClient.get('/thing', {
       params: {
         id: ids,
-        stats: 1 // Include rating statistics
+        stats: 1
       }
     });
+
+    if (!response || !response.data) {
+      return [];
+    }
 
     const xmlDoc = parseXML(response.data);
     const items = xmlDoc.querySelectorAll('item');
@@ -91,7 +182,6 @@ export const getGameDetails = async (gameIds) => {
         }
       });
 
-      
       const description = item.querySelector('description')?.textContent || '';
 
       const yearpublished = item.querySelector('yearpublished')?.getAttribute('value') || 'N/A';
@@ -144,7 +234,11 @@ export const getGameDetails = async (gameIds) => {
 
     return results;
   } catch (error) {
+    const message = error instanceof Error && error.message.includes('VITE_BGG_API_TOKEN')
+      ? error.message
+      : getApiErrorMessage(error);
+
     console.error('Error fetching game details:', error);
-    throw new Error('Failed to load game details.');
+    throw new Error(message);
   }
 };

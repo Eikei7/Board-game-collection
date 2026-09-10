@@ -104,7 +104,7 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
                         window.dispatchEvent(new CustomEvent('importGames', { detail: { games: parsed } }));
                       }
                     }
-                  } catch (err) {
+                  } catch {
                     alert('Invalid JSON file');
                   }
                 };
