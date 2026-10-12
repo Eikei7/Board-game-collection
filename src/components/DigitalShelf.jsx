@@ -1,9 +1,31 @@
-import { memo, useRef, useState } from 'react';
-import { Trash2, Download, Upload, ArrowUpAZ, ArrowDownAZ, LayoutGrid, List, ArrowUp01, ArrowDown01 } from 'lucide-react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { Trash2, Download, Upload, ArrowUpAZ, ArrowDownAZ, LayoutGrid, List, ArrowUp01, ArrowDown01, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const GAMES_PER_PAGE = 12;
 
 export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport, onSortChange, currentSort }) => {
   const [viewMode, setViewMode] = useState('grid');
+  const [currentPage, setCurrentPage] = useState(1);
   const fileInputRef = useRef(null);
+  const pageCount = Math.ceil(collection.length / GAMES_PER_PAGE);
+
+  const displayedPage = pageCount > 0 ? Math.min(currentPage, pageCount) : 1;
+  const paginatedCollection = useMemo(() => {
+    const startIndex = (displayedPage - 1) * GAMES_PER_PAGE;
+    return collection.slice(startIndex, startIndex + GAMES_PER_PAGE);
+  }, [collection, displayedPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [currentSort]);
+
+  useEffect(() => {
+    if (pageCount === 0 && currentPage !== 1) {
+      setCurrentPage(1);
+    } else if (currentPage > pageCount && pageCount > 0) {
+      setCurrentPage(pageCount);
+    }
+  }, [currentPage, pageCount]);
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -123,7 +145,7 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
         </div>
       ) : (
         <div className={viewMode === 'grid' ? 'collection-grid' : 'collection-list'}>
-          {collection.map((game) => (
+          {paginatedCollection.map((game) => (
             <div 
               key={game.id} 
               className={viewMode === 'grid' ? 'collection-item-grid' : 'collection-item'}
@@ -179,6 +201,34 @@ export const DigitalShelf = memo(({ collection, onRemoveFromCollection, onExport
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {pageCount > 1 && (
+        <div className="pagination" aria-label="Collection pagination">
+          <button
+            type="button"
+            onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+            disabled={displayedPage === 1}
+            className="pagination-button"
+            aria-label="Previous page"
+          >
+            <ChevronLeft size={18} />
+            <span>Previous</span>
+          </button>
+          <span className="pagination-info" aria-live="polite">
+            Page {displayedPage} of {pageCount}
+          </span>
+          <button
+            type="button"
+            onClick={() => setCurrentPage((page) => Math.min(pageCount, page + 1))}
+            disabled={displayedPage === pageCount}
+            className="pagination-button"
+            aria-label="Next page"
+          >
+            <span>Next</span>
+            <ChevronRight size={18} />
+          </button>
         </div>
       )}
     </div>
